@@ -4,19 +4,22 @@ const { MessageEmbed } = require("discord.js")
 module.exports = {
      data: new SlashCommandBuilder()
              .setName("kick")
-             .setDescription("Kicks an user from the guild"),
+             .setDescription("Kicks an user from the guild")
+             .addUserOption(user => user.setName("user").setDescription("Pick a user to kick.").setRequired(true)),
              
   async execute(interaction) {
+    
+    const pickeduser = interaction.options.getUser("user")
+
          interaction.reply({ephemeral: true, embeds: [
            new MessageEmbed()
            .setTitle("Help")
            .setColor("5832589")
-           .setImage("https://media.discordapp.net/attachments/898953752478908466/907744410031226920/line.png?width=360&height=2")
            .setTimestamp()
            .addFields([
              {
                name: "Kick :boot:",
-               value: `<@${user}`,
+               value: `Successfully kicked <@${user}>.`,
                inline: true
              }
            ])
