@@ -1,0 +1,24 @@
+{
+  "name": "raphtalia-bot",
+  "version": "1.0.0",
+  "scripts": {
+    "startshard": "node src/bot.js",
+    "start": "node src/index.js",
+    "devshard": "nodemon src/bot.js",
+    "dev": "nodemon src/index.js",
+    "deploycommands": "node src/deploycommands.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^0.11.0",
+    "@discordjs/rest": "^0.2.0-canary.0",
+    "chalk": "^5.0.0",
+    "discord-api-types": "^0.26.1",
+    "discord.js": "^13.5.1",
+    "dotenv": "^11.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "description": ""
+}
