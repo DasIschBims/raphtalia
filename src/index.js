@@ -1,7 +1,7 @@
-const DiscordJS = require("discord.js");
-const { Collection } = require("discord.js");
-const { token, appId } = require("./config.json");
-const fs = require("fs");
+const DiscordJS = require("discord.js")
+const { Collection } = require("discord.js")
+const { token } = require("./config.json")
+const fs = require("fs")
 
 // Sets intents for the bot
 const { Intents } = DiscordJS;
@@ -17,15 +17,16 @@ const client = new DiscordJS.Client({
 client.commands = new DiscordJS.Collection();
 
 // Reads the command folder
-const commandFolders = fs.readdirSync('./src/commands');
-for (const folder of commandFolders) {
+const cmdFolders = fs.readdirSync('./src/commands');
+for (const folder of cmdFolders) {
     // Filters out all the commands ending with ".js" after reading all the subfolders
 	const commandFiles = fs.readdirSync(`./src/commands/${folder}`).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
         // Grabs all the command ".js" files
 		const command = require(`./commands/${folder}/${file}`);
         // Sets the commands for the bot
-		client.commands.set(command.name, command);
+		client.commands.set(command.data.name, command);
+        console.log(`Successfully loaded ${command.data.name}.`)
 	}
 };
 
@@ -48,15 +49,9 @@ client.on("ready", () => {
 	client.user.setActivity(activity.message, { type: activity.type })
     state + 1
 
-    // Sets "state" to "0" if it reached "100"
-    if (state = 100) {
-        state = 0
-    }
-
     }, 8000);
 });
 
-// Catches errors
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return
 
