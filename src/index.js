@@ -26,7 +26,9 @@ for (const folder of cmdFolders) {
 		const command = require(`./commands/${folder}/${file}`);
         // Sets the commands for the bot
 		client.commands.set(command.data.name, command);
-        console.log(`Successfully loaded ${command.data.name}.`)
+        console.log(`Successfully loaded ${file}`);
+        // Removes the cached commands
+        delete require.cache[require.resolve(`./commands/${folder}/${file}`)];
 	}
 };
 
