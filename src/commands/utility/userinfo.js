@@ -11,7 +11,7 @@ module.exports = {
     if (interaction.options.getMember("user") === null) {
         interaction.reply({embeds: [
             new MessageEmbed()
-            .setTitle("Userinfo")
+            .setTitle(`${interaction.user.tag}`)
             .setColor("#58ff8d")
             .setThumbnail(interaction.user.avatarURL({dynamic: true}))
             .setTimestamp()
@@ -32,8 +32,9 @@ module.exports = {
         const pickeduser = interaction.options.getMember("user")
         interaction.reply({embeds: [
             new MessageEmbed()
-            .setTitle("Userinfo")
+            .setTitle(`${pickeduser.user.tag}`)
             .setColor("#58ff8d")
+            .setThumbnail(pickeduser.user.avatarURL({dynamic: true}))
             .setTimestamp()
             .addFields([
               {
