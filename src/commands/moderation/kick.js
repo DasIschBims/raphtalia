@@ -8,7 +8,7 @@ module.exports = {
              .addUserOption(user => user.setName("user").setDescription("Pick a user to kick.").setRequired(true))
              .addStringOption(reason => reason.setName("reason").setDescription("Give a reason why this user will be kicked.")),
              
-  async execute(interaction, client) {
+  async execute(interaction) {
 
     const pickeduser = interaction.options.getMember("user")
     const reason = interaction.options.getString("reason")

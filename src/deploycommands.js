@@ -12,7 +12,7 @@ for (const folder of commandFolders) {
 	for (const file of commandFiles) {
         // Grabs all the command ".js" files
 		const command = require(`./commands/${folder}/${file}`);
-        // Sets the commands for the bot
+        // Pushes the commands to discord
 		commands.push(command.data.toJSON());
 	}
 };
