@@ -1,2 +1,2 @@
 # raphtalia
-Will be a discord moderation and utility bot.
+Will be a discord moderation, music and utility bot.
