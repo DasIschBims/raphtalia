@@ -30,7 +30,7 @@ module.exports = {
               },
               {
                   name: "Channels =>",
-                  value: "```ini\n" + `[ ${interaction.guild.channels.cache.filter(filter => filter.type === 'GUILD_TEXT').size} Text ] [ ${interaction.guild.channels.cache.filter(filter => filter.type === 'GUILD_VOICE').size} Voice]` + "```",
+                  value: "```ini\n" + `[ ${interaction.guild.channels.cache.filter(filter => filter.type === 'GUILD_TEXT').size} Text ] [ ${interaction.guild.channels.cache.filter(filter => filter.type === 'GUILD_VOICE').size} Voice ]` + "```",
                   inline: false
               }
             ])
