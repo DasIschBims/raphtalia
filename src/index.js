@@ -32,6 +32,17 @@ for (const folder of cmdFolders) {
 	}
 };
 
+const eventFiles = fs.readdirSync('./src/events').filter(file => file.endsWith('.js'));
+
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
+
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`)
 
