@@ -26,7 +26,7 @@ module.exports = {
         .setTitle(`${interaction.user.username} slaps ${pickeduser}`)
         .setColor("#58ff8d")
         .setImage(`${apiResponse.response}`)
-        .setFooter("Gifs from kawaii.red")
+        .setFooter({text: "Gifs from kawaii.red"})
         .setTimestamp()
       ]})
     })
