@@ -1,5 +1,4 @@
 const DiscordJS = require("discord.js")
-const { Collection } = require("discord.js")
 const { token } = require("./config.json")
 const fs = require("fs")
 
