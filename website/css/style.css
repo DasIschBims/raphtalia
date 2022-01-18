@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Work+Sans&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    --lime: #58ff8d;
+    --background: #121212;
+    --menu-bar: #181818;
+    --top-gradient: #404040;
+    --bottom-gradient: #282828;
+    --primary-text: #FFFFFF;
+    --secondary-text: #B3B3B3;
+    background-color: var(--background);
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+* {
+    scrollbar-width: auto;
+    scrollbar-color: var(--lime) var(--top-gradient);
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--top-gradient);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--lime);
+    border-radius: 0px;
+    border: 3px none var(--primary-text);
+}
+
+.navbar {
+    width: 100%;
+    padding: 16px;
+    position: relative;
+    background-color: var(--menu-bar);
+}
+
+.logo {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 64px;
+}
+
+.logo img {
+    height: 64px;
+    border-radius: 50%;
+    margin-right: 32px;
+}
+
+.navcontent {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.navcontent a {
+    text-decoration: none;
+    color: var(--primary-text);
+}
+
+.navcontent ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.navcontent li {
+    color: var(--primary-text);
+    font-size: 18px;
+    margin-right: 16px !important;
+    border-radius: 5px 15px;
+    padding: 8px;
+    transition: 0.2s;
+}
+
+.navcontent li:hover, .active{
+    background-color: var(--bottom-gradient);
+}
+
+.navcontent li:hover a, .active {
+    color: var(--lime);
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-text);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+footer div:first-child {
+    padding: 16px 0;
+}
+
+footer div {
+    padding: 0 0 16px 0;
+    background: var(--top-gradient);
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+}
+
+#footercontent {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#footercontent p {
+    padding: 0 10px;
+    color: var(--lime);
+}
+
+.footerlink {
+    color: var(--primary-text);
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.footerlink:hover {
+    text-decoration: underline 2px var(--lime) !important;
+}
