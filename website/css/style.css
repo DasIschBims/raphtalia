@@ -42,13 +42,16 @@ body {
 }
 
 .navbar {
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 16px;
-    position: relative;
+    padding: 18px;
+    position: fixed;
     background-color: var(--menu-bar);
 }
 
 .logo {
+    display: flex;
     align-items: center;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -59,6 +62,7 @@ body {
     height: 64px;
     border-radius: 50%;
     margin-right: 32px;
+    border: 3px solid var(--lime);
 }
 
 .navcontent {
@@ -87,15 +91,25 @@ body {
     margin-right: 16px !important;
     border-radius: 5px 15px;
     padding: 8px;
-    transition: 0.2s;
+    transition: all 100ms ease-in;
 }
 
 .navcontent li:hover, .active{
     background-color: var(--bottom-gradient);
+    -webkit-box-shadow:0px 0px 10px 5px rgba(88,255,141,0.5);
+    -moz-box-shadow: 0px 0px 10px 5px rgba(88,255,141,0.5);
+    box-shadow: 0px 0px 10px 5px rgba(88,255,141,0.5);
 }
 
 .navcontent li:hover a, .active {
     color: var(--lime);
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
 }
 
 footer {

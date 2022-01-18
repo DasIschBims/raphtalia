@@ -1,18 +1,103 @@
-#home {
-    height: 100vh;
+.content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+    height: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 
-#home p {
+.content:first-child {
+    margin-top: 100px;
+}
+
+#row1 {
+    height: calc(100vh - 100px);
+}
+
+#background {
+    background-image: url("../img/wave-bg-home.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+}
+
+#bot {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 128px;
+    width: 128px;
+}
+
+#bot img {
+    height: 128px;
+    width: 128px;
+    border-radius: 50%;
+    margin-bottom: 64px;
+    border: 3px solid var(--lime);
+    -webkit-box-shadow:0px 0px 10px 5px rgba(88,255,141,0.5);
+    -moz-box-shadow: 0px 0px 10px 5px rgba(88,255,141,0.5);
+    box-shadow: 0px 0px 10px 5px rgba(88,255,141,0.5);
+}
+
+#cards {
+    display: flex;
+    flex-direction: row;
+}
+
+#inviteButton {
+    padding: 1.25rem;
+    margin-top: 20px;
+}
+
+#inviteButton a {
+    padding: 1.25rem;
+    border-radius: 5px 15px;
+    background-color: var(--bottom-gradient);
+    width: 100%;
+    transition: all 150ms ease-in;
+    text-decoration: none;
+    font-weight: bold;
     color: var(--primary-text);
-    margin: 10px;
 }
 
-#aboutShort {
-    height: 100vh;
+#inviteButton a:hover {
+    background-color: var(--lime);
+    color: var(--bottom-gradient);
+    -webkit-box-shadow:0px 0px 10px 5px rgba(88,255,141,0.5);
+    -moz-box-shadow: 0px 0px 10px 5px rgba(88,255,141,0.5);
+    box-shadow: 0px 0px 10px 5px rgba(88,255,141,0.5);
+}
+
+.cardContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.cardContainer h3 {
+    text-align: center;
+    color: var(--primary-text);
+}
+
+.card {
+    padding: 1.25rem;
+    width: 15rem;
+    border-radius: 5px 15px;
+    margin-right: 15px;
+    margin-left: 15px;
     background-color: var(--bottom-gradient);
 }
 
-#aboutShort p {
-    color: var(--primary-text);
-    margin: 10px;
+#placeholder {
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(140, 140, 140, 0.4);
 }
