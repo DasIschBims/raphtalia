@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "gh-pages -d"
+    "deploy": "gh-pages -d website"
   },
   "repository": {
     "type": "git",
