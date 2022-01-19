@@ -1,0 +1,22 @@
+{
+  "name": "raphtalia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "gh-pages -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DasIschBims/raphtalia.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DasIschBims/raphtalia/issues"
+  },
+  "homepage": "https://dasischbims.github.io/raphtalia",
+  "dependencies": {
+    "gh-pages": "^3.2.3"
+  }
+}
