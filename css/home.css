@@ -19,7 +19,7 @@
     background-image: url("../img/wave-bg-home.svg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: bottom;
+    background-position: center;
 }
 
 #bot {
