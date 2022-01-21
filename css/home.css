@@ -124,13 +124,13 @@
 
     .card {
         padding: 0.5rem;
-        margin-top: 15px;
-        margin-bottom: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 
     .cardContainer {
         margin-bottom: auto;
-        margin-top: 55px;
+        margin-top: auto;
     }
 
     #bot, #bot img {
