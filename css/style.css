@@ -195,7 +195,7 @@ footer div {
     text-decoration: underline 2px var(--lime) !important;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1000px) {
     .navcontent ul, .logo {
         display: none;
     }
