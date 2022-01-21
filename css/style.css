@@ -50,6 +50,37 @@ body {
     background-color: var(--menu-bar);
 }
 
+.navBars {
+    display: inline-block;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: 10%;
+}
+  
+.bar1, .bar2, .bar3 {
+    display: none;
+    width: 35px;
+    height: 5px;
+    background-color: var(--lime);
+    margin: 6px 0;
+    transition: 0.4s;
+}
+  
+.navMenuActive .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-90deg) translate(-11px, -11px);
+}
+  
+.navMenuActive .bar2 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(-90deg) translate(0, 0);
+}
+  
+.navMenuActive .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(-90deg) translate(11px, 11px);
+}
+
 .logo {
     display: flex;
     align-items: center;
@@ -162,4 +193,17 @@ footer div {
 
 .footerlink:hover {
     text-decoration: underline 2px var(--lime) !important;
+}
+
+@media (max-width: 480px) {
+    .navcontent ul, .logo {
+        display: none;
+    }
+    .bar1, .bar2, .bar3 {
+        display: block;
+    }
+
+    .navbar {
+        padding: 8px;
+    }
 }

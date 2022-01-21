@@ -101,3 +101,16 @@
     font-weight: bold;
     color: rgb(140, 140, 140, 0.4);
 }
+
+@media (max-width: 480px) {
+    #background {
+        background-image: url("../img/wave-bg-home-mobile.svg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .content:first-child {
+        margin-top: 55px;
+    }
+}
