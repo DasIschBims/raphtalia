@@ -1,5 +1,60 @@
-#content {
+.content {
     margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
+    height: calc(100vh - 55px);
+}
+
+.content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+    height: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.content h3 {
+    color: var(--primary-text);
+    text-align: center;
+    padding: 10%;
+}
+
+#row1 {
+    height: calc(100vh - 100px);
+}
+
+.aboutContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.aboutContainer h3 {
+    text-align: center;
+    color: var(--primary-text);
+}
+
+@media (max-width: 480px) {
+    * {
+        font-size: 16px;
+    }
+
+    .content {
+        margin-top: 55px;
+        height: calc(100vh - 55px);
+    }
+
+    #row1 {
+        height: calc(100vh - 55px);
+    }
+
+    .cardContainer {
+        margin-bottom: auto;
+        margin-top: auto;
+    }
 }
