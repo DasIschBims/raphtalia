@@ -103,6 +103,10 @@
 }
 
 @media (max-width: 480px) {
+    * {
+        font-size: 16px;
+    }
+
     #background {
         background-image: url("../img/wave-bg-home-mobile.svg");
         background-size: cover;
@@ -112,5 +116,29 @@
 
     .content:first-child {
         margin-top: 55px;
+    }
+    
+    #cards {
+        flex-direction: column;
+    }
+
+    .card {
+        padding: 0.5rem;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .cardContainer {
+        margin-bottom: auto;
+        margin-top: 55px;
+    }
+
+    #bot, #bot img {
+        height: 96px;
+        width: 96px;
+    }
+
+    #row1 {
+        height: calc(100vh - 55px);
     }
 }
