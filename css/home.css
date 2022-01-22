@@ -101,3 +101,44 @@
     font-weight: bold;
     color: rgb(140, 140, 140, 0.4);
 }
+
+@media (max-width: 1000px) {
+    * {
+        font-size: 16px;
+    }
+
+    #background {
+        background-image: url("../img/wave-bg-home-mobile.svg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .content:first-child {
+        margin-top: 55px;
+    }
+    
+    #cards {
+        flex-direction: column;
+    }
+
+    .card {
+        padding: 0.5rem;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .cardContainer {
+        margin-bottom: auto;
+        margin-top: auto;
+    }
+    
+    #bot, #bot img {
+        height: 96px;
+        width: 96px;
+    }
+
+    #row1 {
+        height: calc(100vh - 55px);
+    }
+}
