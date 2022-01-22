@@ -52,7 +52,7 @@ client.on("ready", () => {
             {  type: "WATCHING", message: `${client.guilds.cache.size} servers`},
             {  type: "PLAYING", message: "with code."},
             {  type: "WATCHING", message: "bit.ly/raphtalia-page"},
-            {  type: "COMPETING", message: "in the botlist"}
+            {  type: "COMPETING", message: "the botlist"}
         ]
         // Adds 1 to "state" to get new activity
         state = (state + 1) % activitylist.length;
