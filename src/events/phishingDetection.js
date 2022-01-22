@@ -9,17 +9,18 @@ module.exports = {
         function reply () {
             message.reply({embeds: [
                 new MessageEmbed()
-                .setTitle(":warning: Suspicious link detected! :warning:")
+                .setTitle(":x: Suspicious link detected!")
                 .setColor("#FF0000")
                 .setTimestamp()
+                .setDescription(`${message.author} sent a link that is most likely a phishing link.`)
                 .addFields([
                     {
-                        name: "Information =>",
-                        value: `${message.author} (${message.author.username}#${message.author.discriminator}) sent a link that is most likely a phishing link.\n` + "``" + "If you happen to feel unsafe learn how to protect yourself via the button below." + "``"
+                        name: "Author =>",
+                        value: "```diff\n" + `- ${message.author.username}#${message.author.discriminator}\n- ${message.author.id}` + "```"
                     },
                     {
-                        name: "Author =>",
-                        value: "```ini\n" + `[ ${message.author.username}#${message.author.discriminator} (${message.author.id}) ]` + "```"
+                        name: "Tip =>",
+                        value: "*If you happen to feel unsafe learn how to stay safe via the button below.*"
                     }
                 ])
             ], components: [

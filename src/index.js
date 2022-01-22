@@ -25,9 +25,7 @@ for (const folder of cmdFolders) {
 		const command = require(`./commands/${folder}/${file}`);
         // Sets the commands for the bot
 		client.commands.set(command.data.name, command);
-        console.log(`Successfully loaded ${file}`);
-        // Removes the cached commands
-        delete require.cache[require.resolve(`./commands/${folder}/${file}`)];
+        console.log(`Successfully loaded command: ${file}`);
 	}
 };
 
@@ -40,6 +38,7 @@ for (const file of eventFiles) {
 	} else {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
+    console.log(`Successfully loaded thread: ${file}`);
 }
 
 client.on("ready", () => {
@@ -52,6 +51,8 @@ client.on("ready", () => {
         const activitylist = [
             {  type: "WATCHING", message: `${client.guilds.cache.size} servers`},
             {  type: "PLAYING", message: "with code."},
+            {  type: "WATCHING", message: "bit.ly/raphtalia-page"},
+            {  type: "COMPETING", message: "in the botlist"}
         ]
         // Adds 1 to "state" to get new activity
         state = (state + 1) % activitylist.length;
