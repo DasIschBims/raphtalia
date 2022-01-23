@@ -58,6 +58,10 @@ body {
     overflow: hidden;
 }
 
+.displayNone {
+    display: none !important;
+}
+
 .activeOverlay {
     opacity: 1 !important;
 }
@@ -69,6 +73,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    transition: all 0.4s ease-in-out;
 }
 
 .overlayli {
