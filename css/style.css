@@ -49,8 +49,9 @@ body {
     top: 0;
     background: var(--background);
     z-index: 90;
-    display: none;
-    transition: all .5s ease-in-out;
+    display: block;
+    transition: opacity 0.4s ease-in-out;
+    opacity: 0;
 }
 
 .hideOverflow {
@@ -58,7 +59,7 @@ body {
 }
 
 .activeOverlay {
-    display: block !important;
+    opacity: 1 !important;
 }
 
 .overlayContent {
@@ -108,7 +109,7 @@ body {
     height: 5px;
     background-color: var(--lime);
     margin: 6px 0;
-    transition: 0.4s;
+    transition: .3s;
 }
   
 .navMenuActive .bar1 {
