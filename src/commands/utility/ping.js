@@ -8,20 +8,14 @@ module.exports = {
   async execute(interaction) {
          interaction.reply({embeds: [
            new MessageEmbed()
-           .setTitle("Bot stats")
            .setColor("#58ff8d")
            .setTimestamp()
            .addFields([
              {
-               name: "Ping",
-               value: "```ini\n" + `[ ${Date.now() - interaction.createdTimestamp}` + "ms ]```",
+               name: "Pong! 🏓",
+               value:  `Ping: **${Date.now() - interaction.createdTimestamp}ms**\nAPI-Latency: **${Math.round(interaction.client.ws.ping)}ms**`,
                inline: true
-             },
-             {
-              name: "API Latency",
-              value: "```ini\n" + `[ ${Math.round(interaction.client.ws.ping)}` + "ms ]```",
-              inline: true
-            }
+             }
            ])
          ]})
     }
