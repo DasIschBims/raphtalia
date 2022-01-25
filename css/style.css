@@ -50,9 +50,12 @@ body {
     background: var(--background);
     z-index: 90;
     display: block;
-    transition: visibility 0.4s ease-in-out, opacity 0.4s ease-in-out;
     visibility: hidden;
     opacity: 0;
+}
+
+.navOverlayTransition {
+    transition: visibility 0.4s ease-in-out, opacity 0.4s ease-in-out;
 }
 
 .hideOverflow {
@@ -117,6 +120,9 @@ body {
     background-color: var(--lime);
     margin: 6px 0;
     transition: .3s;
+    -webkit-box-shadow:0px 0px 10px 3px rgba(88,255,141,0.5);
+    -moz-box-shadow: 0px 0px 10px 3px rgba(88,255,141,0.5);
+    box-shadow: 0px 0px 10px 3px rgba(88,255,141,0.5);
 }
   
 .navMenuActive .bar1 {

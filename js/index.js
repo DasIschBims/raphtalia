@@ -4,6 +4,6 @@ function navButton (btn) {
     document.body.classList.toggle("hideOverflow")
 }
 
-function overlayMenu () {
-    document.getElementById("navMenuOverlay").classList.remove("displayNone")
+function overlayTransition () {
+        document.getElementById("navMenuOverlay").classList.add("navOverlayTransition")
 }
