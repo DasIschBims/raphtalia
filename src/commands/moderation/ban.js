@@ -11,7 +11,11 @@ module.exports = {
   async execute(interaction) {
 
     const pickeduser = interaction.options.getMember("user")
-    const reason = interaction.options.getString("reason")
+    var reason = interaction.options.getString("reason")
+
+    if (reason === null) {
+      reason = "No reason specified."
+    }
 
     if (!interaction.member.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
         {
@@ -23,7 +27,7 @@ module.exports = {
             ]})
         }
     } else {
-    if (pickeduser.kickable) {
+    if (pickeduser.bannable) {
         interaction.reply({ephemeral: true, embeds: [
           new MessageEmbed()
           .setTitle("Ban :hammer:")
@@ -32,7 +36,7 @@ module.exports = {
           .setDescription(`Successfully banned ${pickeduser}.`)
         ]})
 
-        pickeduser.ban(reason);
+        pickeduser.ban({reason: `${reason} | Banned by ${interaction.member} (${interaction.member.user.username}#${interaction.user.discriminator})`});
 
       } else {
         interaction.reply({ephemeral: true, embeds: [
