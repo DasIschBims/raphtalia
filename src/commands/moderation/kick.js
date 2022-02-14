@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { appId } = require("../../config.json")
 const { MessageEmbed, Permissions } = require("discord.js")
 
 module.exports = {
@@ -26,6 +27,17 @@ module.exports = {
         pickeduser.kick(reason);
 
       } else {
+        if (!interaction.guild.members.cache.get(appId).permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
+          {
+               interaction.reply({ephemeral: true, embeds: [
+                 new MessageEmbed()
+                 .setTitle("I don't have permission to do that!")
+                 .setColor("#FF0000")
+                 .setTimestamp()
+               ]})
+          }
+          return 0;
+       }
         interaction.reply({ephemeral: true, embeds: [
           new MessageEmbed()
           .setTitle("This user cannot be kicked.")
