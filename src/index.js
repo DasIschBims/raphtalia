@@ -1,6 +1,7 @@
 const DiscordJS = require("discord.js")
 const { token } = require("./config.json")
 const fs = require("fs")
+const { Player } = require("discord-player")
 
 // Sets intents for the bot
 const { Intents } = DiscordJS;
@@ -8,7 +9,8 @@ const client = new DiscordJS.Client({
     intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_MESSAGES
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_VOICE_STATES
     ]
 });
 
@@ -40,6 +42,13 @@ for (const file of eventFiles) {
 	}
     console.log(`Successfully loaded event: ${file}`);
 }
+
+client.player = new Player(client, {
+    ytdlOptions: {
+        quality: "highestaudio",
+        highWaterMark: 1 << 25
+    }
+})
 
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`)
@@ -76,7 +85,7 @@ client.on('interactionCreate', async interaction => {
         await command.execute(interaction)
     } catch (error) {
         console.error(error)
-        await interaction.reply({ content: `An error occured while attemting to run /${interaction.commandName}.\nPlease try again, if this doesn't work try contacting DasIschBims#1248 via the [Support Server](https://discord.gg/ZURcscg)`, ephemeral: true})
+        await interaction.followUp({ content: `An error occured while attemting to run /${interaction.commandName}.\nPlease try again, if this doesn't work try contacting DasIschBims#1248 via the [Support Server](https://discord.gg/ZURcscg)`, ephemeral: true})
     }
 });
 

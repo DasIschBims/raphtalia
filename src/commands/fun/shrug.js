@@ -8,6 +8,7 @@ module.exports = {
              .setName("shrug")
              .setDescription("Shrug moment."),
   async execute(interaction) {
+    await interaction.deferReply()
     const apiLink = `https://kawaii.red/api/gif/shrug/token=${kawaiiRedToken}/`
 
     fetch(apiLink).then(res => {
@@ -17,7 +18,7 @@ module.exports = {
       return res.json();
     })
     .then(apiResponse => {
-      interaction.reply({embeds: [
+      interaction.editReply({embeds: [
         new MessageEmbed()
         .setTitle(`${interaction.user.username} shrugs`)
         .setColor("#58ff8d")

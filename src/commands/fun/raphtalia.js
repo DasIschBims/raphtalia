@@ -7,10 +7,10 @@ module.exports = {
              .setName("raphtalia")
              .setDescription("Sends random Raphtalia image or gif"),
   async execute(interaction) {
-
+    await interaction.deferReply()
     const randomimg = raphtalia[Math.floor(Math.random() * raphtalia.length)]
 
-         interaction.reply({embeds: [
+         interaction.editReply({embeds: [
            new MessageEmbed()
            .setTitle("Here you go! (っ^_^)っ")
            .setColor("#58ff8d")

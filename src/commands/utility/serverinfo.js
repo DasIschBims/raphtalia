@@ -82,26 +82,6 @@ module.exports = {
                     name: "<:emoji_ghost:658538492321595393> | Emotes",
                     value: `> Emotes: **${interaction.guild.emojis.cache.size}**`
                 }
-            //   {
-            //       name: "Creation date =>",
-            //       value: `<t:${Math.round(interaction.guild.createdTimestamp/1000)}>`,
-            //       inline: true
-            //   },
-            //   {
-            //       name: "Current Members =>",
-            //       value: "```ini\n" + `[ ${interaction.guild.memberCount} Members ]` + "```",
-            //       inline: true
-            //   },
-            //   {
-            //       name: "Roles =>",
-            //       value: "```ini\n" + `[ ${Math.floor(interaction.guild.roles.cache.size)} Roles ]` + "```",
-            //       inline: true
-            //   },
-            //   {
-            //       name: "Channels =>",
-            //       value: `[ ${interaction.guild.channels.cache.filter(filter => filter.type === 'GUILD_TEXT').size} Text ] [ ${interaction.guild.channels.cache.filter(filter => filter.type === 'GUILD_VOICE').size} Voice ]`,
-            //       inline: false
-            //   }
             ])
           ]})
   }

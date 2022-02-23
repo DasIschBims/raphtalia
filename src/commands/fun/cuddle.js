@@ -9,7 +9,7 @@ module.exports = {
              .setDescription("Cuddles a person.")
              .addUserOption(user => user.setName("user").setDescription("Pick a user to cuddle.").setRequired(true)),
   async execute(interaction) {
-
+    await interaction.deferReply()
     const pickeduser = interaction.options.getMember("user").user.username
 
     const apiLink = `https://kawaii.red/api/gif/cuddle/token=${kawaiiRedToken}/`
@@ -21,7 +21,7 @@ module.exports = {
       return res.json();
     })
     .then(apiResponse => {
-      interaction.reply({embeds: [
+      interaction.editReply({embeds: [
         new MessageEmbed()
         .setTitle(`${interaction.user.username} cuddles ${pickeduser}`)
         .setColor("#58ff8d")
