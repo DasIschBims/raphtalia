@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { MessageEmbed } = require('discord.js')
+const playdl = require("play-dl");
 const { QueryType } = require("discord-player")
 
 module.exports = {
@@ -8,115 +9,142 @@ module.exports = {
              .setDescription("Play a song of your liking in a Voice Channel.")
              .addStringOption(query => query.setName("query").setDescription("Enter a keywory or url.").setRequired(true)),
 
-  async execute(interaction) {
+  async execute(interaction, client) {
     await interaction.deferReply()
-      if (!interaction.member.voice.channel) {
-          return interaction.editReply({embeds: [
-            new MessageEmbed()
-            .setColor("#FF0000")
-            .setTitle(`Please join a voice channel and try again!`)
-            .setTimestamp()
-          ], ephemeral: true})
+
+    if (!interaction.member.voice.channelId) {
+      return await interaction.followUp({ embeds: [
+        new MessageEmbed()
+        .setDescription("❌ | Please join a voice channel to play music!")
+        .setColor("FF0000")
+      ]})
+    }
+
+    if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
+      return await interaction.followUp({ embeds: [
+        new MessageEmbed()
+        .setDescription("❌ | You have to be in my voice channel!")
+        .setColor("FF0000")
+      ]})
+    }
+
+    const songQuery = interaction.options.getString("query")
+    const searchQuery = await interaction.client.player.search(songQuery, {
+      requestedBy: interaction.user,
+      searchEngine: QueryType.AUTO
+    })
+
+    let queue = await interaction.client.player.createQueue(interaction.guild, {
+      initialVolume: 80,
+      leaveOnEmptyCooldown: 120000,
+      leaveOnEmpty: true,
+      bufferTimeout: 200,
+      async onBeforeCreateStream(track, source, _queue) {
+        if (source === "soundcloud") {
+          const client_id = await playdl.getFreeClientID();
+          playdl.setToken({
+            soundcloud: {
+              client_id: client_id,
+            },
+          });
+          if (await playdl.so_validate(track.url)) {
+            let soundCloudInfo = await playdl.soundcloud(track.url);
+            return (await playdl.stream_from_info(soundCloudInfo)).stream;
+          }
+          return;
+        }
+
+        if (source === "youtube") {
+          const validateSP = playdl.sp_validate(track.url);
+          const spotifyList = ["track", "album", "playlist"];
+          if (spotifyList.includes(validateSP)) {
+            if (playdl.is_expired()) {
+              await playdl.refreshToken();
+            }
+            let spotifyInfo = await playdl.spotify(track.url);
+            let youtube = await playdl.search(`${spotifyInfo.name}`, {
+              limit: 2,
+            });
+            return (
+              await playdl.stream(youtube[0].url, {
+                discordPlayerCompatibility: true,
+                quality: 1,
+              })
+            ).stream;
+          }
+
+          return (
+            await playdl.stream(track.url, {
+              discordPlayerCompatibility: true,
+              quality: 1,
+            })
+          ).stream;
+        }
       }
+    })
 
-      const queue = await interaction.client.player.createQueue(interaction.guild)
-
+    try {
       if (!queue.connection) {
         await queue.connect(interaction.member.voice.channel)
       }
-
-      const spTrack = "spotify.com/track/"
-      const spPlaylist = "spotify.com/playlist/"
-
-      const ytPlaylist = "list="
-      const ytVideo = "watch?v="
-      
-      let url = interaction.options.getString("query")
-
-      if (url.indexOf(spTrack) > 1) {
-         result =  await interaction.client.player.search(url, {
-            requestedBy: interaction.user,
-            searchEngine: QueryType.SPOTIFY_SONG
-        })
-      }
-
-      if (url.indexOf(spPlaylist) > 1) {
-         result =  await interaction.client.player.search(url, {
-            requestedBy: interaction.user,
-            searchEngine: QueryType.SPOTIFY_PLAYLIST
-        })
-      }
-      if (url.indexOf(ytPlaylist) > url.indexOf(ytVideo)) {
-         result =  await interaction.client.player.search(url, {
-          requestedBy: interaction.user,
-          searchEngine: QueryType.YOUTUBE_PLAYLIST
-      })
-      }
-
-      if (url.indexOf(ytVideo) > url.indexOf(ytPlaylist)) {
-         result =  await interaction.client.player.search(url, {
-          requestedBy: interaction.user,
-          searchEngine: QueryType.YOUTUBE_VIDEO
-      })
-      }
-
-      if (url.indexOf(ytPlaylist) < 1 || url.indexOf(ytVideo) < 1 || url.indexOf(spPlaylist) < 1 || url.indexOf(spTrack) < 1) {
-        result =  await interaction.client.player.search(url, {
-          requestedBy: interaction.user,
-          searchEngine: QueryType.AUTO
-      })
-
-      const song = result.tracks[0]
-      queue.addTracks(result.tracks)
-
-      await queue.addTrack(song)
-      if (!queue.playing) await queue.play()
-      interaction.editReply({embeds: [
+    } catch {
+      client.player.deleteQueue(interaction.guild);
+      queue.destroy(true)
+      return await interaction.followUp({ embeds: [
         new MessageEmbed()
-        .setColor("#58ff8d")
-        .setTitle(`Successfully added to the queue`)
-        .setURL(song.url)
-        .setDescription(`**${song.title}**`)
-        .setThumbnail(song.thumbnail)
-        .setFooter({text: `Duration: ${song.duration}`})
-        .setTimestamp()
-      ]})
+        .setDescription("❌ | Couldn't join your voice channel.")
+        .setColor("FF0000")
+      ], empheral: true})
+    }
 
-      return;
-      } else {
-        if (!result.tracks.lenght === 0) {
-          return interaction.editReply("Not found.")
-      }
+    searchQuery.playlist
+      ? queue.addTracks(searchQuery.tracks)
+      : queue.addTrack(searchQuery.tracks[0]);
 
-      const song = result.tracks[0]
-      queue.addTracks(result.tracks)
+    if (!queue.playling) {
+        await queue.play();
+        searchQuery.playlist
+          ? await interaction.followUp({
+            embeds: [
+              new MessageEmbed()
+              .setColor("#58FF8D")
+              .setDescription(`✅ | Queued ${queue.tracks.length} Songs`),
 
-      if (url.indexOf(ytVideo) > 1 || url.indexOf(spTrack) > 1) {
-        await queue.addTrack(song)
-        if (!queue.playing) await queue.play()
-        interaction.editReply({embeds: [
-          new MessageEmbed()
-          .setColor("#58ff8d")
-          .setTitle(`Successfully added to the queue`)
-          .setURL(song.url)
-          .setDescription(`**${song.title}**`)
-          .setThumbnail(song.thumbnail)
-          .setFooter({text: `Duration: ${song.duration}`})
-          .setTimestamp()
-        ]})
-      } else {
-        const playlist = result.playlist
-        if (!queue.playing) await queue.play()
-        await interaction.editReply({embeds: [
-          new MessageEmbed()
-          .setColor("#58ff8d")
-          .setTitle(`Successfully added ${playlist.title} to the queue`)
-          .setURL(playlist.url)
-          .setDescription(`**${playlist.tracks.lenght} Songs have been added to the queue!**`)
-          .setThumbnail(playlist.thumbnail)
-          .setTimestamp()
-        ]})
-      }
-      }
+              new MessageEmbed()
+              .setColor("#58FF8D")
+              .setTitle(`${queue.playling ? "✅ Added to queue" : "🎶 Playing"}`)
+              .setAuthor({name: `${interaction.user.username}`, iconURL: `${interaction.user.avatarURL() || client.user.avatarURL()}`})
+              .setDescription(`Song: **[${searchQuery.tracks[0].title}](${searchQuery.tracks[0].url})**`)
+              .setThumbnail(searchQuery.tracks[0].thumbnail)
+              .setTimestamp()
+              .addFields(
+                {
+                  name: "Author",
+                  value: `${searchQuery.tracks[0].author}`,
+                  inline: true
+                },
+                {
+                  name: "Duration",
+                  value: `${searchQuery.tracks[0].duration}`,
+                  inline: true
+                }
+              )]
+          })
+          : await interaction.followUp({
+            embeds: [
+              new MessageEmbed()
+              .setColor("#58FF8D")
+              .setDescription(`✅ | Queued ${queue.tracks.length} Songs`)
+            ]
+          })
+          return
+    }
+
+    if (queue.playing) {
+      searchQuery.playlist
+        ? await interaction.followUp({ embeds: [playlistEmbed, musicEmbed]})
+        : await interaction.followUp({ embeds: [musicEmbed]})
+        return
+    }
    }
 }

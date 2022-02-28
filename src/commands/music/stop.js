@@ -11,20 +11,33 @@ module.exports = {
     const queue = await interaction.client.player.createQueue(interaction.guild)
 
     if (!queue || !queue.playing) {
-      return await interaction.editReply({embeds: [
+      return await interaction.editReply({ embeds: [
         new MessageEmbed()
         .setColor("#FF0000")
-        .setDescription("There is currently no music playing!")
+        .setDescription("❌ | There is currently no music playing!")
         .setTimestamp()
       ], ephemeral: true})
     }
 
+    if (
+      interaction.guild.me.voice.channelId &&
+      interaction.member.voice.channelId !==
+      interaction.guild.me.voice.channelId
+    ) {
+      return await interaction.followUp({
+        embeds: [
+          new MessageEmbed()
+          .setColor("#FF0000")
+          .setDescription("❌ | You have to be in my music channel to do that!")
+          .setTimestamp()
+      ]})
+    }
     await queue.destroy()
 
-    await interaction.editReply({embeds: [
+    await interaction.editReply({ embeds: [
       new MessageEmbed()
-        .setColor("#58ff8d")
-        .setTitle("Stopped playing and cleared the queue!")
+        .setColor("#58FF8D")
+        .setTitle("✅ | Stopped playing and cleared the queue!")
         .setTimestamp()
       ]})
    }
