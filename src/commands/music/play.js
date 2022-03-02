@@ -134,7 +134,7 @@ module.exports = {
             embeds: [
               new MessageEmbed()
               .setColor("#58FF8D")
-              .setDescription(`✅ | Queued ${queue.tracks.length} Songs`)
+              .setDescription(`✅ | Queued ${queue.tracks.length + 1} Song`)
             ]
           })
           return
@@ -142,8 +142,36 @@ module.exports = {
 
     if (queue.playing) {
       searchQuery.playlist
-        ? await interaction.followUp({ embeds: [playlistEmbed, musicEmbed]})
-        : await interaction.followUp({ embeds: [musicEmbed]})
+        ? await interaction.followUp({ embeds: [
+          new MessageEmbed()
+              .setColor("#58FF8D")
+              .setTitle(`${queue.playling ? "✅ Added to queue" : "🎶 Playing"}`)
+              .setAuthor({name: `${interaction.user.username}`, iconURL: `${interaction.user.avatarURL() || client.user.avatarURL()}`})
+              .setDescription(`Song: **[${searchQuery.tracks[0].title}](${searchQuery.tracks[0].url})**`)
+              .setThumbnail(searchQuery.tracks[0].thumbnail)
+              .setTimestamp()
+              .addFields(
+                {
+                  name: "Author",
+                  value: `${searchQuery.tracks[0].author}`,
+                  inline: true
+                },
+                {
+                  name: "Duration",
+                  value: `${searchQuery.tracks[0].duration}`,
+                  inline: true
+                }
+              ),
+              new MessageEmbed()
+              .setColor("#58FF8D")
+              .setDescription(`✅ | Queued ${queue.tracks.length} Songs`)
+            ]})
+
+        : await interaction.followUp({ embeds: [
+          new MessageEmbed()
+              .setColor("#58FF8D")
+              .setDescription(`✅ | Queued ${queue.tracks.length + 1} Song`)
+        ]})
         return
     }
    }
