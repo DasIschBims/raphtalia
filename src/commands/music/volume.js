@@ -10,18 +10,24 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply()
     const queue = interaction.client.player.getQueue(interaction.guild)
-    const volume = interaction.options.getInteger("volume")
+    var volume = interaction.options.getInteger("volume")
     
-    if (volume < 20) {
-        volumeEmote = "🔈"
+    if (volume < 30) {
+        var volumeEmote = "🔈"
+    } else if (volume >= 30) {
+        var volumeEmote = "🔉"
+    } else if (volume >= 75) {
+        var volumeEmote = "🔊"
     }
 
-    if (volume > 50) {
-        volumeEmote = "🔉"
-    }
-
-    if (volume > 80) {
-        volumeEmote = "🔊"
+    if (volume > 100) {
+      return await interaction.followUp({
+        embeds: [
+            new MessageEmbed()
+            .setColor("#FF0000")
+            .setDescription("❌ | Please enter a number between 1 and 100!")
+            .setTimestamp()
+        ]})
     }
 
     if (
