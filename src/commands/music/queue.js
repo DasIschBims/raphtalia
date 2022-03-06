@@ -33,12 +33,18 @@ module.exports = {
 
     const currentSong = queue.current
 
+    if (totalpages === 0) {
+      var pagecount = ""
+    } else {
+      var pagecount = `Page ${page + 1 + "/" + totalpages}`
+    }
+
     interaction.editReply({ embeds: [
         new MessageEmbed()
         .setColor("#58ff8d")
         .setDescription("**🎶 | Currently Playing\n" + (currentSong ? `\`[${currentSong.duration}]\` ${currentSong.title} | <@${currentSong.requestedBy.id}>**` : "**None**") + `\n\n**Queue (${queue.tracks.length}):**\n${queueString}`)
         .setThumbnail(currentSong.thumbnail)
-        .setFooter({text: `Page ${page + 1}/${totalpages}`})
+        .setFooter({text: `${pagecount}`})
         .setTimestamp()
       ]})
   }
