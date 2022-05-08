@@ -44,11 +44,16 @@ for (const file of eventFiles) {
 }
 
 client.player = new Player(client, {
+    volumeSmoothness: 0.1,
+    leaveOnEmptyCooldown: 120000,
+    leaveOnEmpty: true,
+    autoSelfDeaf: true,
+    initialVolume: 50,
     ytdlOptions: {
         quality: "highestaudio",
         highWaterMark: 1 << 25
     }
-})
+});
 
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`)

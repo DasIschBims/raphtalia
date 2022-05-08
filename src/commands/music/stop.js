@@ -32,7 +32,8 @@ module.exports = {
           .setTimestamp()
       ]})
     }
-    await queue.destroy()
+    
+    queue.destroy()
 
     await interaction.editReply({ embeds: [
       new MessageEmbed()

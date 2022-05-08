@@ -3,16 +3,30 @@ const { MessageEmbed } = require('discord.js')
 const playdl = require("play-dl");
 const { QueryType } = require("discord-player")
 
+function urlType(url) {
+  switch (url.split("/")[3]) {
+      case "playlist":
+          return "playlist"
+      case "watch":
+          return "video"
+      default:
+          return "invalid"
+  }
+}
+
 module.exports = {
      data: new SlashCommandBuilder()
              .setName("play")
              .setDescription("Play a song of your liking in a Voice Channel.")
              .addStringOption(query => query.setName("query").setDescription("Enter a keywory or url.").setRequired(true)),
 
-  async execute(interaction, client) {
+  async execute(interaction) {
     await interaction.deferReply()
+    const query = interaction.options.getString("query")
+    const guildQueue =  interaction.client.player.getQueue(interaction.guild.id)
+    const channel = interaction.member?.voice?.channel;
 
-    if (!interaction.member.voice.channelId) {
+    if (!channel) {
       return await interaction.followUp({ embeds: [
         new MessageEmbed()
         .setDescription("❌ | Please join a voice channel to play music!")
@@ -20,159 +34,146 @@ module.exports = {
       ]})
     }
 
+    if (guildQueue) {
+      if (channel.id !== interaction.guild.me?.voice?.channelId) {
+        return await interaction.followUp({ embeds: [
+          new MessageEmbed()
+          .setDescription("❌ | Please join the same voice channel to play music!")
+          .setColor("FF0000")
+        ]})
+      }
+    } else {
+        if (!channel.viewable)
+        return interaction.followUp({embeds: [
+          new MessageEmbed()
+          .setDescription("❌ | I need **\`VIEW_CHANNEL\`** permission to view your channel.")
+          .setColor("FF0000")
+        ]})
+        if (!channel.joinable)
+        return interaction.followUp({embeds: [
+          new MessageEmbed()
+          .setDescription("❌ | I need **\`CONNECT_CHANNEL\`** permission to connect to your channel.")
+          .setColor("FF0000")
+        ]})
+        if (!channel.speakable)
+        return interaction.followUp({embeds: [
+          new MessageEmbed()
+          .setDescription("❌ | I need **\`SPEAK\`** permission to speak in your channel.")
+          .setColor("FF0000")
+        ]})
+        if (channel.full)
+        return interaction.followUp({embeds: [
+          new MessageEmbed()
+          .setDescription("❌ | I Can't join, the voice channel is full.")
+          .setColor("FF0000")
+        ]})
+    }
+
     if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
       return await interaction.followUp({ embeds: [
         new MessageEmbed()
-        .setDescription("❌ | You have to be in my voice channel!")
+        .setDescription("❌ | You have to join the voice channel I'm in to use that command!")
         .setColor("FF0000")
       ]})
     }
 
-    const songQuery = interaction.options.getString("query")
-    const searchQuery = await interaction.client.player.search(songQuery, {
-      requestedBy: interaction.user,
-      searchEngine: QueryType.AUTO
-    })
+    let result
+    let url = query
+    switch (urlType(url)) {
+        case "playlist":
+            result = await interaction.client.player.search(url, {
+              requestedBy: interaction.member.id,
+              QueryType: QueryType.YOUTUBE_PLAYLIST
+            })
+            break
+        case "video":
+            result = await interaction.client.player.search(url, {
+              requestedBy: interaction.member.id,
+              QueryType: QueryType.YOUTUBE_VIDEO
+            })
+            break
+        case "invalid":
+            result = await interaction.client.player.search(url, {
+              requestedBy: interaction.member.id,
+              QueryType: QueryType.YOUTUBE_SEARCH
+            })
+    }
+    await interaction.followUp({embeds: [
+        new MessageEmbed()
+        .setColor("#FF88FF")
+        .setDescription("🔎 | Searching...")
+    ]})
 
-    let queue = await interaction.client.player.createQueue(interaction.guild, {
-      initialVolume: 80,
-      leaveOnEmptyCooldown: 120000,
-      leaveOnEmpty: true,
-      bufferTimeout: 200,
-      async onBeforeCreateStream(track, source, _queue) {
-        if (source === "soundcloud") {
-          const client_id = await playdl.getFreeClientID();
-          playdl.setToken({
-            soundcloud: {
-              client_id: client_id,
-            },
-          });
-          if (await playdl.so_validate(track.url)) {
-            let soundCloudInfo = await playdl.soundcloud(track.url);
-            return (await playdl.stream_from_info(soundCloudInfo)).stream;
-          }
-          return;
-        }
+    if (!result || !result.tracks.length) {
+      return await interaction.editReply({ embeds: [
+        new MessageEmbed()
+        .setDescription("❌ | I couldn't find any results!")
+        .setColor("FF0000")
+      ]})
+    }
 
-        if (source === "youtube") {
-          const validateSP = playdl.sp_validate(track.url);
-          const spotifyList = ["track", "album", "playlist"];
-          if (spotifyList.includes(validateSP)) {
-            if (playdl.is_expired()) {
-              await playdl.refreshToken();
+    let queue
+    if (guildQueue) {
+      queue = guildQueue
+    } else {
+      queue = await interaction.client.player.createQueue(interaction.guild, {
+        async onBeforeCreateStream(track, source, _queue) {
+          if (source === "youtube") {
+            const validateSP = playdl.sp_validate(track.url);
+            const spotifyList = ["track", "album", "playlist"];
+            if (spotifyList.includes(validateSP)) {
+              if (playdl.is_expired()) {
+                await playdl.refreshToken();
+              }
+              let spotifyInfo = await playdl.spotify(track.url);
+              let youtube = await playdl.search(`${spotifyInfo.name}`, {
+                limit: 2,
+              });
+              return (
+                await playdl.stream(youtube[0].url, {
+                  discordPlayerCompatibility: true,
+                  quality: 1,
+                })
+              ).stream;
             }
-            let spotifyInfo = await playdl.spotify(track.url);
-            let youtube = await playdl.search(`${spotifyInfo.name}`, {
-              limit: 2,
-            });
+  
             return (
-              await playdl.stream(youtube[0].url, {
+              await playdl.stream(track.url, {
                 discordPlayerCompatibility: true,
                 quality: 1,
               })
             ).stream;
           }
-
-          return (
-            await playdl.stream(track.url, {
-              discordPlayerCompatibility: true,
-              quality: 1,
-            })
-          ).stream;
         }
-      }
-    })
+      })
+    }
 
     try {
-      if (!queue.connection) {
-        await queue.connect(interaction.member.voice.channel)
-      }
-    } catch {
-      client.player.deleteQueue(interaction.guild);
-      queue.destroy(true)
-      return await interaction.followUp({ embeds: [
-        new MessageEmbed()
-        .setDescription("❌ | Couldn't join your voice channel.")
-        .setColor("FF0000")
-      ], empheral: true})
+      if (!queue.connection) await queue.connect(channel)
+      } catch (error) {
+        queue.destroy(true)
+        console.log(error)
     }
 
-    searchQuery.playlist
-      ? queue.addTracks(searchQuery.tracks)
-      : queue.addTrack(searchQuery.tracks[0]);
+    result.playlist ? queue.addTracks(result.tracks) : queue.addTrack(result.tracks[0])
+
+    if (urlType(url) == "playlist") {
+      queue.addTracks(result.tracks)
+      await interaction.editReply({ embeds: [
+        new MessageEmbed()
+        .setColor("#58ff8d")
+        .setDescription(`🎵 | Added playlist \`${result.playlist.title}\` to the queue!`)
+      ]})
+    } else {
+      await interaction.editReply({ embeds: [
+        new MessageEmbed()
+        .setColor("#58ff8d")
+        .setDescription(`🎵 | Added \`${result.tracks[0].title}\` to the queue!`)
+      ]})
+    }
 
     if (!queue.playling) {
-        await queue.play();
-        searchQuery.playlist
-          ? await interaction.followUp({
-            embeds: [
-              new MessageEmbed()
-              .setColor("#58FF8D")
-              .setDescription(`✅ | Queued ${queue.tracks.length} Songs`),
-
-              new MessageEmbed()
-              .setColor("#58FF8D")
-              .setTitle(`${queue.playling ? "✅ Added to queue" : "🎶 Playing"}`)
-              .setAuthor({name: `${interaction.user.username}`, iconURL: `${interaction.user.avatarURL() || client.user.avatarURL()}`})
-              .setDescription(`Song: **[${searchQuery.tracks[0].title}](${searchQuery.tracks[0].url})**`)
-              .setThumbnail(searchQuery.tracks[0].thumbnail)
-              .setTimestamp()
-              .addFields(
-                {
-                  name: "Author",
-                  value: `${searchQuery.tracks[0].author}`,
-                  inline: true
-                },
-                {
-                  name: "Duration",
-                  value: `${searchQuery.tracks[0].duration}`,
-                  inline: true
-                }
-              )]
-          })
-          : await interaction.followUp({
-            embeds: [
-              new MessageEmbed()
-              .setColor("#58FF8D")
-              .setDescription(`✅ | Queued ${queue.tracks.length + 1} Song`)
-            ]
-          })
-          return
-    }
-
-    if (queue.playing) {
-      searchQuery.playlist
-        ? await interaction.followUp({ embeds: [
-          new MessageEmbed()
-              .setColor("#58FF8D")
-              .setTitle(`${queue.playling ? "✅ Added to queue" : "🎶 Playing"}`)
-              .setAuthor({name: `${interaction.user.username}`, iconURL: `${interaction.user.avatarURL() || client.user.avatarURL()}`})
-              .setDescription(`Song: **[${searchQuery.tracks[0].title}](${searchQuery.tracks[0].url})**`)
-              .setThumbnail(searchQuery.tracks[0].thumbnail)
-              .setTimestamp()
-              .addFields(
-                {
-                  name: "Author",
-                  value: `${searchQuery.tracks[0].author}`,
-                  inline: true
-                },
-                {
-                  name: "Duration",
-                  value: `${searchQuery.tracks[0].duration}`,
-                  inline: true
-                }
-              ),
-              new MessageEmbed()
-              .setColor("#58FF8D")
-              .setDescription(`✅ | Queued ${queue.tracks.length} Songs`)
-            ]})
-
-        : await interaction.followUp({ embeds: [
-          new MessageEmbed()
-              .setColor("#58FF8D")
-              .setDescription(`✅ | Queued ${queue.tracks.length + 1} Song`)
-        ]})
-        return
+      queue.play();
     }
    }
 }
