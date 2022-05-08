@@ -16,7 +16,7 @@ module.exports = {
 
     async function getUserAvatarUrl(userId) {
       const user = await interaction.client.api.users(userId).get();
-      return user.avatar ? `[Link (4096x4096)](https://cdn.discordapp.com/avatars/${userId}/${user.avatar}.png?size=4096)\n[Link (2048x2048)](https://cdn.discordapp.com/banners/${userId}/${user.avatar}.png?size=2048)` : `${bannerColor}`;
+      return user.avatar ? `[Link (4096x4096)](https://cdn.discordapp.com/avatars/${userId}/${user.avatar}.png?size=4096)\n[Link (2048x2048)](https://cdn.discordapp.com/avatars/${userId}/${user.avatar}.png?size=2048)` : `${bannerColor}`;
   }
     
     async function sendUserEmbed () {
