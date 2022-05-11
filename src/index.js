@@ -36,9 +36,9 @@ const eventFiles = fs.readdirSync('./src/events').filter(file => file.endsWith('
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
 	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
+		client.once(event.name, (...args) => event.execute(...args, client));
 	} else {
-		client.on(event.name, (...args) => event.execute(...args));
+		client.on(event.name, (...args) => event.execute(...args, client));
 	}
     console.log(`Successfully loaded event: ${file}`);
 }
@@ -49,9 +49,23 @@ client.player = new Player(client, {
     leaveOnEmpty: true,
     autoSelfDeaf: true,
     initialVolume: 50,
+    bufferingTimeout: 2,
+    volumeSmoothness: 0.2,
     ytdlOptions: {
         quality: "highestaudio",
-        highWaterMark: 1 << 25
+        highWaterMark: 1 << 25,
+        filter: "audioonly"
+    }
+});
+
+client.on("voiceStateUpdate", (event, newstate) => {
+    if (event.id === client.user.id){
+        if (newstate.channelId === null) {
+            client.player.deleteQueue(event.guild.id);
+            return
+        } else {
+            return
+        }
     }
 });
 

@@ -14,7 +14,7 @@ module.exports = {
         interaction.editReply({embeds: [
             new MessageEmbed()
             .setColor("#FF0000")
-            .setDescription("❌ | There are currently no songs in the queue!")
+            .setDescription("❌ | There is currently no music playing!")
             .setTimestamp()
           ], ephemeral: true})
           return

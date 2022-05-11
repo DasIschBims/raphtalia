@@ -157,6 +157,15 @@ module.exports = {
 
     result.playlist ? queue.addTracks(result.tracks) : queue.addTrack(result.tracks[0])
 
+    if (!queue.playling) {
+      await interaction.editReply({ embeds: [
+        new MessageEmbed()
+        .setColor("#58ff8d")
+        .setDescription(`⬇️ | Downloading...`)
+      ]})
+      await queue.play();
+    }
+
     if (urlType(url) == "playlist") {
       queue.addTracks(result.tracks)
       await interaction.editReply({ embeds: [
@@ -170,10 +179,6 @@ module.exports = {
         .setColor("#58ff8d")
         .setDescription(`🎵 | Added \`${result.tracks[0].title}\` to the queue!`)
       ]})
-    }
-
-    if (!queue.playling) {
-      queue.play();
     }
    }
 }
