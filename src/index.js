@@ -1,7 +1,8 @@
 const DiscordJS = require("discord.js")
-const { token } = require("./config.json")
+const config = require("./config.json")
 const fs = require("fs")
 const { Player } = require("discord-player")
+const playdl = require("play-dl")
 
 // Sets intents for the bot
 const { Intents } = DiscordJS;
@@ -58,6 +59,15 @@ client.player = new Player(client, {
     }
 });
 
+playdl.setToken({
+    spotify : {
+        client_id: config.spClientId,
+        client_secret: config.spClientSecret,
+        refresh_token: config.spRefreshToken,
+        market: 'DE'
+}
+});
+
 client.on("voiceStateUpdate", (event, newstate) => {
     if (event.id === client.user.id){
         if (newstate.channelId === null) {
@@ -108,4 +118,4 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-client.login(token);
+client.login(config.token);

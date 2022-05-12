@@ -123,6 +123,7 @@ module.exports = {
             const spotifyList = ["track", "album", "playlist"];
             if (spotifyList.includes(validateSP)) {
               if (playdl.is_expired()) {
+                console.log(is_expired());
                 await playdl.refreshToken();
               }
               let spotifyInfo = await playdl.spotify(track.url);
