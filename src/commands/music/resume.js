@@ -3,27 +3,11 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("stop")
-    .setDescription("Stops the music and clears the queue."),
-
+    .setName("resume")
+    .setDescription("Resume the current song."),
   async execute(interaction) {
     await interaction.deferReply();
-    const queue = await interaction.client.player.createQueue(
-      interaction.guild
-    );
-
-    if (!queue || !queue.playing) {
-      return await interaction.editReply({
-        embeds: [
-          new MessageEmbed()
-            .setColor("#FF0000")
-            .setDescription("❌ | There is currently no music playing!")
-            .setTimestamp(),
-        ],
-        ephemeral: true,
-      });
-    }
-
+    const queue = interaction.client.player.getQueue(interaction.guild);
     if (
       interaction.guild.me.voice.channelId &&
       interaction.member.voice.channelId !==
@@ -41,14 +25,28 @@ module.exports = {
       });
     }
 
-    queue.destroy();
+    if (!queue || !queue.playing) {
+      return await interaction.followUp({
+        embeds: [
+          new MessageEmbed()
+            .setColor("#FF0000")
+            .setDescription("❌ | There is currently no music playing!")
+            .setTimestamp(),
+        ],
+      });
+    }
 
-    await interaction.editReply({
+    const currentSong = queue.current;
+
+    queue.setPaused(false);
+
+    return await interaction.followUp({
       embeds: [
         new MessageEmbed()
-          .setColor("#58FF8D")
-          .setTitle("✅ | Stopped playing and cleared the queue!")
-          .setTimestamp(),
+          .setColor("#00FF00")
+          .setThumbnail(currentSong.thumbnail)
+          .setTimestamp()
+          .setDescription(`▶️ | Resumed **${currentSong.title}**`),
       ],
     });
   },
