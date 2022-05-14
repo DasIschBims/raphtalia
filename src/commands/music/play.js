@@ -4,14 +4,25 @@ const playdl = require("play-dl");
 const { QueryType } = require("discord-player")
 
 function urlType(url) {
-  switch (url.split("/")[3]) {
-      case "playlist":
-          return "playlist"
-      case "watch":
-          return "video"
-      default:
-          return "invalid"
+  var url = url.toLowerCase();
+  if (url.split("/")[2] === "www.youtube.com" || url.split("/")[2] === "youtube.com" || url.split("/")[2] === "youtu.be" || url.split("/")[2] === "www.youtu.be") {
+    var urlSplit = url.split("/")[3];
+    var url = urlSplit.split("?")[0];
+    return url;
   }
+
+  switch (url.split("/")[3]) {
+    case "playlist":
+        return "playlist"
+    case "watch":
+        return "video"
+    default:
+        return "invalid"
+}
+}
+
+async function sleep (t) {
+  setTimeout(() => {}, t);
 }
 
 module.exports = {
@@ -123,7 +134,6 @@ module.exports = {
             const spotifyList = ["track", "album", "playlist"];
             if (spotifyList.includes(validateSP)) {
               if (playdl.is_expired()) {
-                console.log(is_expired());
                 await playdl.refreshToken();
               }
               let spotifyInfo = await playdl.spotify(track.url);
@@ -164,22 +174,33 @@ module.exports = {
         .setColor("#58ff8d")
         .setDescription(`⬇️ | Downloading...`)
       ]})
-      await queue.play();
+      await sleep(3000)
+      if (!queue.playing) {
+        await queue.play();
+      }
     }
 
-    if (urlType(url) == "playlist") {
-      queue.addTracks(result.tracks)
-      await interaction.editReply({ embeds: [
-        new MessageEmbed()
-        .setColor("#58ff8d")
-        .setDescription(`🎵 | Added playlist \`${result.playlist.title}\` to the queue!`)
-      ]})
-    } else {
-      await interaction.editReply({ embeds: [
-        new MessageEmbed()
-        .setColor("#58ff8d")
-        .setDescription(`🎵 | Added \`${result.tracks[0].title}\` to the queue!`)
-      ]})
+    switch (urlType(url)) {
+        case "playlist":
+            await interaction.editReply({ embeds: [
+              new MessageEmbed()
+              .setColor("#58ff8d")
+              .setDescription(`🎵 | Added playlist \`${result.playlist.title}\` to the queue!`)
+            ]})
+            break
+        case "video":
+            await interaction.editReply({ embeds: [
+              new MessageEmbed()
+              .setColor("#58ff8d")
+              .setDescription(`🎵 | Added \`${result.tracks[0].title}\` to the queue!`)
+            ]})
+            break
+        case "invalid":
+            await interaction.editReply({ embeds: [
+              new MessageEmbed()
+              .setColor("#58ff8d")
+              .setDescription(`🎵 | Added \`${result.tracks[0].title}\` to the queue!`)
+            ]})
     }
    }
 }

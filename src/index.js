@@ -59,20 +59,46 @@ client.player = new Player(client, {
     }
 });
 
-playdl.setToken({
-    spotify : {
-        client_id: config.spClientId,
-        client_secret: config.spClientSecret,
-        refresh_token: config.spRefreshToken,
-        market: 'DE'
+function playdlSetToken () {
+    playdl.setToken({
+        spotify : {
+            client_id: config.spClientId,
+            client_secret: config.spClientSecret,
+            refresh_token: config.spRefreshToken,
+            market: 'DE'
+    }
+    });
 }
-});
+
+playdlSetToken()
+
+setInterval(() => {
+    if (playdl.is_expired()) {
+        console.log("Refreshing token...")
+        playdl.refreshToken();
+        console.log("Token refreshed!")
+    } 
+}, 10000);
+
+setInterval(() => {
+    try {
+        if (playdl.is_expired()) {
+            console.log("Refreshing token...")
+            playdl.refreshToken();
+            console.log("Token refreshed!")
+        } 
+    } catch (error) {
+        console.log("An error occured while refreshing token!:\n\n" + error)
+    }
+}, 10000);
 
 client.on("voiceStateUpdate", (event, newstate) => {
     if (event.id === client.user.id){
         if (newstate.channelId === null) {
-            client.player.deleteQueue(event.guild.id);
-            return
+            if (client.player.getQueue(event.guild.id) && client.player.getQueue(event.guild.id).playing) {
+                client.player.deleteQueue(event.guild.id);
+                return
+            }
         } else {
             return
         }
