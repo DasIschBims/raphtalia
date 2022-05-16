@@ -100,10 +100,10 @@ client.on("voiceStateUpdate", (event, newstate) => {
   if (event.id === client.user.id) {
     if (newstate.channelId === null) {
       if (
-        client.player.getQueue(event.guild.id) &&
-        client.player.getQueue(event.guild.id).playing
+        client.player.getQueue(event.guild) &&
+        client.player.getQueue(event.guild).playing
       ) {
-        client.player.deleteQueue(event.guild.id);
+        client.player.deleteQueue(event.guild);
         return;
       }
     } else {
