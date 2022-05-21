@@ -44,12 +44,10 @@ module.exports = {
     });
     const currentSong = queue.current;
 
-    console.log(currentSong);
-
     return await interaction.followUp({
       embeds: [
         new MessageEmbed()
-          .setColor("#00FF00")
+          .setColor("#58ff8d")
           .setAuthor({
             name: "Current Song Playing:",
             iconURL:

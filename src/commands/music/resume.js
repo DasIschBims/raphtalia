@@ -43,7 +43,7 @@ module.exports = {
     return await interaction.followUp({
       embeds: [
         new MessageEmbed()
-          .setColor("#00FF00")
+          .setColor("#58ff8d")
           .setThumbnail(currentSong.thumbnail)
           .setTimestamp()
           .setDescription(`▶️ | Resumed **${currentSong.title}**`),

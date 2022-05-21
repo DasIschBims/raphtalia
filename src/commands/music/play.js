@@ -135,7 +135,7 @@ module.exports = {
           QueryType: QueryType.YOUTUBE_PLAYLIST,
         });
         break;
-      case "video":
+      case "watch":
         result = await interaction.client.player.search(url, {
           requestedBy: interaction.member.id,
           QueryType: QueryType.YOUTUBE_VIDEO,
@@ -238,7 +238,7 @@ module.exports = {
           ],
         });
         break;
-      case "video":
+      case "watch":
         await interaction.editReply({
           embeds: [
             new MessageEmbed()

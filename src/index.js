@@ -3,6 +3,7 @@ const config = require("./config.json");
 const fs = require("fs");
 const { Player } = require("discord-player");
 const playdl = require("play-dl");
+const chalk = require("chalk");
 
 // Sets intents for the bot
 const { Intents } = DiscordJS;
@@ -18,6 +19,10 @@ const client = new DiscordJS.Client({
 // Creates new collection for the commands
 client.commands = new DiscordJS.Collection();
 
+function consoleLog (type, typeColor, what, whatColor, log, logColor) {
+  console.log(chalk.hex("363636")("<") + chalk.hex(typeColor)(type) + chalk.hex("363636")(":") + chalk.hex(whatColor)(what) + chalk.hex("363636")("> ") + chalk.hex(logColor)(log));
+}
+
 // Reads the command folder
 const cmdFolders = fs.readdirSync("./src/commands");
 for (const folder of cmdFolders) {
@@ -30,7 +35,7 @@ for (const folder of cmdFolders) {
     const command = require(`./commands/${folder}/${file}`);
     // Sets the commands for the bot
     client.commands.set(command.data.name, command);
-    console.log(`Successfully loaded command: ${file}`);
+    consoleLog("LOADED", "2bafe3", "COMMAND", "e3b52b", `${file}`, "fff");
   }
 }
 
@@ -45,7 +50,7 @@ for (const file of eventFiles) {
   } else {
     client.on(event.name, (...args) => event.execute(...args, client));
   }
-  console.log(`Successfully loaded event: ${file}`);
+  consoleLog("LOADED", "2bafe3", "EVENT", "2be36b", `${file}`, "fff");
 }
 
 client.player = new Player(client, {
@@ -72,29 +77,10 @@ function playdlSetToken() {
       market: "DE",
     },
   });
+  consoleLog("SET", "2bafe3", "TOKEN", "b82be3", "play-dl", "fff");
 }
 
 playdlSetToken();
-
-setInterval(() => {
-  if (playdl.is_expired()) {
-    console.log("Refreshing token...");
-    playdl.refreshToken();
-    console.log("Token refreshed!");
-  }
-}, 10000);
-
-setInterval(() => {
-  try {
-    if (playdl.is_expired()) {
-      console.log("Refreshing token...");
-      playdl.refreshToken();
-      console.log("Token refreshed!");
-    }
-  } catch (error) {
-    console.log("An error occured while refreshing token!:\n\n" + error);
-  }
-}, 10000);
 
 client.on("voiceStateUpdate", (event, newstate) => {
   if (event.id === client.user.id) {
@@ -113,7 +99,7 @@ client.on("voiceStateUpdate", (event, newstate) => {
 });
 
 client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  consoleLog("LOGIN", "58ff8d", "SUCCESS", "58ff8d", `${client.user.tag}`, "fff");
 
   var state = 0;
 
@@ -121,9 +107,7 @@ client.on("ready", () => {
     // Creates an array with below activies
     const activitylist = [
       { type: "WATCHING", message: `${client.guilds.cache.size} servers` },
-      { type: "PLAYING", message: "with code." },
       { type: "WATCHING", message: "bit.ly/raphtalia-page" },
-      { type: "COMPETING", message: "the botlist" },
     ];
     // Adds 1 to "state" to get new activity
     state = (state + 1) % activitylist.length;
@@ -145,7 +129,7 @@ client.on("interactionCreate", async (interaction) => {
   try {
     await command.execute(interaction);
   } catch (error) {
-    console.error(error);
+    consoleLog("BOT", "2bafe3", "ERROR", "FF0000", `${error}`, "fff");
     await interaction.followUp({
       content: `An error occured while attemting to run /${interaction.commandName}.\nPlease try again, if this doesn't work try contacting DasIschBims#1248 via the [Support Server](https://discord.gg/xxWmfUSeDU)`,
       ephemeral: true,
