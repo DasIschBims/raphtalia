@@ -17,6 +17,7 @@
     "axios": "^0.27.2",
     "chalk": "^4.1.2",
     "cross-fetch": "^3.1.4",
+    "dbots.gg": "^0.2.0",
     "discord-api-types": "^0.27.2",
     "discord-player": "^5.2.2",
     "discord.js": "^13.5.1",
