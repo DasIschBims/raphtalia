@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const { MessageEmbed, MessageActionRow, MessageButton, Permissions } = require('discord.js')
 const phishing = require('stop-discord-phishing')
 
 module.exports = {
@@ -35,12 +35,14 @@ module.exports = {
         }
 
         async function checkMessage (message) {
-            let isPhishing = await phishing.checkMessage(phishingCheck)
+            let isPhishing = await phishing.checkMessage(message)
 
             if (isPhishing === true) {
-                if (message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
+                try {
                     reply()
-                } else { return }
+                } catch (error) {
+                    return
+                }
             }
         }
 
