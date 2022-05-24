@@ -38,7 +38,9 @@ module.exports = {
             let isPhishing = await phishing.checkMessage(phishingCheck)
 
             if (isPhishing === true) {
-                reply()
+                if (message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) {
+                    reply()
+                } else { return }
             }
         }
 
