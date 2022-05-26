@@ -4,7 +4,7 @@ const fs = require("fs");
 const { Player } = require("discord-player");
 const playdl = require("play-dl");
 const chalk = require("chalk");
-const dbgg = require("dbots.gg")
+// const dbgg = require("dbots.gg")
 
 // Sets intents for the bot
 const { Intents } = DiscordJS;
@@ -17,21 +17,21 @@ const client = new DiscordJS.Client({
   ],
 });
 
-const dbots = new dbgg.Api(client, config.dbotsToken)
+// const dbots = new dbgg.Api(client, config.dbotsToken)
 
-async function postStats() {
-    await dbots.post({
-      guildCount: client.guilds.cache.size,
-      shardCount: client.ws.shards.size,
-    }, false)
-    consoleLog("POST", "2bafe3", "SUCCESS", "58ff8d", `Server count for discord.bots.gg: ${client.guilds.cache.size}`, "fff");
-}
+// async function postStats() {
+//     await dbots.post({
+//       guildCount: client.guilds.cache.size,
+//       shardCount: client.ws.shards.size,
+//     }, false)
+//     consoleLog("POST", "2bafe3", "SUCCESS", "58ff8d", `Server count for discord.bots.gg: ${client.guilds.cache.size}`, "fff");
+// }
 
-client.on("ready", async () => {
-  setInterval(() => {
-    postStats()
-  }, 60000);
-})
+// client.on("ready", async () => {
+//   setInterval(() => {
+//     postStats()
+//   }, 60000);
+// })
 
 // Creates new collection for the commands
 client.commands = new DiscordJS.Collection();
