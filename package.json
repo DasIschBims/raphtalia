@@ -2,8 +2,8 @@
   "name": "raphtalia-bot",
   "version": "1.3.2",
   "scripts": {
-    "start": "node src/index.js --no-warning",
-    "dev": "nodemon src/index.js --no-warning",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "deploycommands": "node src/deploycommands.js"
   },
   "keywords": [],
