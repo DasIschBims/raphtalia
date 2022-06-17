@@ -41,6 +41,7 @@ module.exports = {
       });
     }
 
+    queue.clear();
     queue.destroy();
 
     await interaction.editReply({
